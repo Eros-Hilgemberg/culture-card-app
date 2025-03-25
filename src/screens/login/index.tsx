@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Alert, Button, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { style } from "./styles"
 import { MaterialIcons } from '@expo/vector-icons'
@@ -20,6 +20,7 @@ type FormData = z.infer<typeof schema>
 
 function IndexLogin() {
     const navigation = useNavigation<StackTypes>();
+    const [visible, setVisible] = useState<boolean>(false);
     function handleNext() {
         navigation.navigate("Home");
     }
@@ -58,8 +59,10 @@ function IndexLogin() {
                 {errors.user && <Text style={style.error}>{errors.user.message}</Text>}
                 <Text style={style.label}>Senha</Text>
                 <View style={style.boxInput}>
-                    <TextInput style={style.input} secureTextEntry={true} placeholder='Digite sua senha' onChangeText={(text) => setValue("password", text)} {...register("password")} />
-                    <MaterialIcons name="remove-red-eye" size={20} color={themas.colors.gray} />
+                    <TextInput style={style.input} secureTextEntry={visible} placeholder='Digite sua senha' onChangeText={(text) => setValue("password", text)} {...register("password")} />
+                    <TouchableOpacity onPress={() => setVisible(!visible)}>
+                        <MaterialIcons name="remove-red-eye" size={20} color={themas.colors.gray} />
+                    </TouchableOpacity>
                 </View>
                 {errors.password && <Text style={style.error}>{errors.password.message}</Text>}
 
