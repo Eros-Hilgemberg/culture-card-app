@@ -85,5 +85,11 @@ export const style = StyleSheet.create({
     },
     textBottom: {
         marginTop: 15,
+    },
+    error: {
+        fontSize: 12,
+        color: "red",
+        paddingInline: 10,
+        marginTop: 2
     }
 })
