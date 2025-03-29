@@ -4,6 +4,7 @@ type StackNavigation = {
     Home: undefined;
     Login: undefined;
     Person: undefined;
-    Group: undefined
+    Group: undefined;
+    CardPerson: undefined;
 };
 export type StackTypes = NativeStackNavigationProp<StackNavigation>
