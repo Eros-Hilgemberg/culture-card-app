@@ -14,13 +14,13 @@ const IndexCardPerson = () => {
   const { user } = useContext(AuthContext);
   async function listPerson() {
     try {
-      const response = await API.get<{ image_base64: string }>(
-        `agent/generateImage/${user?.user.id}`,
-        {
-          params: { email: user?.email, password: user?.password },
-        }
-      );
-      setImage(response.data.image_base64);
+      const response = await API.get<{
+        image_base64_front: string;
+        image_base64_back: string;
+      }>(`agent/generateImage/${user?.user.id}`, {
+        params: { email: user?.email, password: user?.password },
+      });
+      setImage(response.data.image_base64_front);
       setIsLoading(false);
     } catch (error) {
       console.log("ERRO " + error);

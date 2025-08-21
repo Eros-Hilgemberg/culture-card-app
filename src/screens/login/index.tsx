@@ -30,7 +30,7 @@ type FormData = z.infer<typeof schema>;
 
 function IndexLogin() {
   const { login } = useContext(AuthContext);
-  const [visible, setVisible] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(true);
   const {
     register,
     handleSubmit,
