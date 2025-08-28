@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { AuthContext } from "../../context/AuthContext";
 import { themas } from "../../global/themes";
 import API from "../../services/api";
@@ -8,6 +8,8 @@ import { style } from "./styles";
 
 const CardGroup = () => {
   const [image, setImage] = useState<string>();
+  const [imageBack, setImageBack] = useState<string>();
+  const [visible, setVisible] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   //const navigation = useNavigation<StackTypes>();
   const { user } = useContext(AuthContext);
@@ -22,6 +24,7 @@ const CardGroup = () => {
         params: { email: user?.email, password: user?.password },
       });
       setImage(response.data.image_base64_front);
+      setImageBack(response.data.image_base64_back);
       setIsLoading(false);
     } catch (error) {
       console.log("ERRO " + error);
@@ -49,7 +52,13 @@ const CardGroup = () => {
     </View>
   ) : (
     <View style={style.container}>
-      <Image source={{ uri: image }} style={style.image} />
+      <TouchableOpacity onPress={() => setVisible(!visible)}>
+        {visible ? (
+          <Image source={{ uri: image }} style={style.image} />
+        ) : (
+          <Image source={{ uri: imageBack }} style={style.image} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };

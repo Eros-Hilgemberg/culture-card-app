@@ -1,6 +1,6 @@
 import { useNavigation } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { StackTypes } from "../../@types/routes";
 import { AuthContext } from "../../context/AuthContext";
 import { themas } from "../../global/themes";
@@ -9,6 +9,8 @@ import { style } from "./styles";
 
 const IndexCardPerson = () => {
   const [image, setImage] = useState<string>();
+  const [imageBack, setImageBack] = useState<string>();
+  const [visible, setVisible] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<StackTypes>();
   const { user } = useContext(AuthContext);
@@ -21,6 +23,7 @@ const IndexCardPerson = () => {
         params: { email: user?.email, password: user?.password },
       });
       setImage(response.data.image_base64_front);
+      setImageBack(response.data.image_base64_back);
       setIsLoading(false);
     } catch (error) {
       console.log("ERRO " + error);
@@ -31,6 +34,7 @@ const IndexCardPerson = () => {
   useEffect(() => {
     listPerson();
   }, []);
+
   return isLoading ? (
     <View style={style.container}>
       <Text
@@ -45,7 +49,13 @@ const IndexCardPerson = () => {
     </View>
   ) : (
     <View style={style.container}>
-      <Image source={{ uri: image }} style={style.image} />
+      <TouchableOpacity onPress={() => setVisible(!visible)}>
+        {visible ? (
+          <Image source={{ uri: image }} style={style.image} />
+        ) : (
+          <Image source={{ uri: imageBack }} style={style.image} />
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
