@@ -7,15 +7,10 @@ Aplicativo móvel desenvolvido em **React Native** com **TypeScript**, que tem c
 
 ## 📑 Índice
 
-2. [Funcionalidades](#-funcionalidades)  
-3. [Tecnologias e Estrutura do Projeto](#-tecnologias-e-estrutura-do-projeto)  
-4. [Instalação e Uso](#-instalação-e-uso)  
-5. [Configuração de Ambiente](#-configuração-de-ambiente)  
-6. [Scripts disponíveis](#-scripts-disponíveis)  
-7. [Testes](#-testes) *(se aplicável)*  
-8. [Contribuição](#-contribuição)  
-9. [Licença](#-licença)  
-10. [Contato](#-contato)
+1. [Funcionalidades](#-funcionalidades)  
+2. [Tecnologias e Estrutura do Projeto](#-tecnologias-e-estrutura-do-projeto)
+3. [Instalação e Uso](#-instalação-e-uso)
+4. [Build](#-build)
 
 
 ## 🆕 Funcionalidades  
@@ -27,7 +22,7 @@ Aplicativo móvel desenvolvido em **React Native** com **TypeScript**, que tem c
 
 ---
 
-## 🛠 Tecnologias e Estrutura do Projeto
+## 🛠 Tecnologias e Estrutura do Projet
 
 - **React Native** com **TypeScript**  
 - **Context API** para gerenciamento de estado  
@@ -72,3 +67,21 @@ Antes de começar, certifique-se de ter instalado:
 ```bash
 git clone https://github.com/Eros-Hilgemberg/culture-card-app.git
 cd culture-card-app
+```
+
+### Instale as dependências:
+
+```bash
+ npm install
+# ou
+yarn install
+````
+
+### Execute o app:
+
+```
+npx expo start
+
+```
+
+## ⚙️Build
