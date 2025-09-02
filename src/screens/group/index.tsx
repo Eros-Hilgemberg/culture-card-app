@@ -1,6 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { StackTypes } from "../../@types/routes";
 import { AuthContext } from "../../context/AuthContext";
@@ -18,35 +19,34 @@ export interface InfoGroup {
   type: string;
 }
 const IndexGroup = () => {
-  const [group, setGroup] = useState<UserGroup>();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<StackTypes>();
   const { user } = useContext(AuthContext);
 
-  async function listGoups() {
-    try {
-      const response = await API.get(`agent/${user?.user.id}`, {
-        params: { email: user?.email, password: user?.password },
-      });
-
-      setGroup(response.data.agent);
-      setIsLoading(false);
-    } catch (error) {
-      console.log("ERRO " + error);
-      alert("Erro ao carregar a imagem");
-      navigation.navigate("Home");
-    }
+  async function listGoups(): Promise<UserGroup> {
+    const response = await API.get(`agent/${user?.user.id}`, {
+      params: { email: user?.email, password: user?.password },
+    });
+    return response.data.agent;
   }
 
-  const cardGroup = (id: string) => {
-    navigation.navigate("CardGroup", { id });
-  };
-
+  const { data, isLoading, isError, error } = useQuery<UserGroup>({
+    queryKey: ["groups", user?.user?.id],
+    queryFn: listGoups,
+    retry: 1,
+  });
   useEffect(() => {
-    listGoups();
-  }, []);
-  return isLoading ? (
-    <View style={styles.container}>
+    if (isError && error) {
+      console.log("ERRO " + error);
+      alert("Erro ao carregar grupos");
+      navigation.navigate("Home");
+    }
+  }, [isError, error, navigation]);
+
+  const cardGroup = (id: string) => {
+    navigation.navigate("CardGroup", { id: id });
+  };
+  return isLoading || !data ? (
+    <View style={styles.container_loading}>
       <Text
         style={{
           color: themas.colors.secondary,
@@ -60,11 +60,11 @@ const IndexGroup = () => {
   ) : (
     <View style={styles.container}>
       <Text style={styles.title}>
-        Seus grupos {group!.nomeCompleto.split(" ")[0]}
+        Seus grupos {String(data.nomeCompleto).split(" ")[0]}
       </Text>
-      {group && (
+      {data && (
         <FlatList
-          data={group.agent_relation}
+          data={data.agent_relation}
           keyExtractor={(item) => item.object_id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity

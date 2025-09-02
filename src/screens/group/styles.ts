@@ -5,6 +5,14 @@ export const styles = StyleSheet.create({
     padding: 16,
     gap: 25,
   },
+  container_loading: {
+    flex: 1,
+    padding: 16,
+    gap: 25,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",

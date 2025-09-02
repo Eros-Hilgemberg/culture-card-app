@@ -1,43 +1,58 @@
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import { StackNavigation } from "../../@types/routes";
 import { AuthContext } from "../../context/AuthContext";
 import { themas } from "../../global/themes";
 import API from "../../services/api";
 import { style } from "./styles";
 
+interface ImageData {
+  image_base64_front: string;
+  image_base64_back: string;
+}
+
+type CardGroupRouteProps = RouteProp<StackNavigation, "CardGroup">;
 const CardGroup = () => {
   const [image, setImage] = useState<string>();
   const [imageBack, setImageBack] = useState<string>();
   const [visible, setVisible] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  //const navigation = useNavigation<StackTypes>();
   const { user } = useContext(AuthContext);
-  const id = 6;
 
-  async function group() {
-    try {
-      const response = await API.get<{
-        image_base64_front: string;
-        image_base64_back: string;
-      }>(`agent/generateImage/${id}`, {
-        params: { email: user?.email, password: user?.password },
-      });
-      setImage(response.data.image_base64_front);
-      setImageBack(response.data.image_base64_back);
-      setIsLoading(false);
-    } catch (error) {
+  const route = useRoute<CardGroupRouteProps>();
+  const { id } = route.params;
+  async function fetchGroupImages(
+    id: string,
+    email: string,
+    password: string
+  ): Promise<ImageData> {
+    const response = await API.get<ImageData>(`agent/generateImage/${id}`, {
+      params: { email, password },
+    });
+    return response.data;
+  }
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["groupImages", id],
+    queryFn: () => fetchGroupImages(String(id), user!.email, user!.password),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
       console.log("ERRO " + error);
       alert("Erro ao carregar a imagem");
-      //navigation.navigate("Home");
       router.push("/home");
     }
-  }
+  }, [isError, error]);
   useEffect(() => {
-    if (id) {
-      group();
+    if (data) {
+      setImage(data.image_base64_front);
+      setImageBack(data.image_base64_back);
     }
-  }, [id]);
+  }, [data]);
   return isLoading ? (
     <View style={style.container}>
       <Text

@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-type StackNavigation = {
+export type StackNavigation = {
   Home: undefined;
   Login: undefined;
   Person: undefined;

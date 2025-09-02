@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useNavigation } from "expo-router";
 import React, { useContext, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
@@ -7,33 +8,50 @@ import { themas } from "../../global/themes";
 import API from "../../services/api";
 import { style } from "./styles";
 
+interface ImageData {
+  image_base64_front: string;
+  image_base64_back: string;
+}
 const IndexCardPerson = () => {
   const [image, setImage] = useState<string>();
   const [imageBack, setImageBack] = useState<string>();
   const [visible, setVisible] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigation = useNavigation<StackTypes>();
   const { user } = useContext(AuthContext);
-  async function listPerson() {
-    try {
-      const response = await API.get<{
-        image_base64_front: string;
-        image_base64_back: string;
-      }>(`agent/generateImage/${user?.user.id}`, {
-        params: { email: user?.email, password: user?.password },
-      });
-      setImage(response.data.image_base64_front);
-      setImageBack(response.data.image_base64_back);
-      setIsLoading(false);
-    } catch (error) {
+
+  const fetchPersonImages = async (): Promise<ImageData> => {
+    if (!user?.user?.id) {
+      throw new Error("User ID is not available.");
+    }
+    const response = await API.get<ImageData>(
+      `agent/generateImage/${user.user.id}`,
+      {
+        params: { email: user.email, password: user.password },
+      }
+    );
+    return response.data;
+  };
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["personImages", user?.user?.id],
+    queryFn: fetchPersonImages,
+    enabled: !!user?.user?.id,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (isError && error) {
       console.log("ERRO " + error);
       alert("Erro ao carregar a imagem");
-      navigation.navigate("Home");
+      navigation.goBack();
     }
-  }
+  }, [isError, error, navigation]);
   useEffect(() => {
-    listPerson();
-  }, []);
+    if (data) {
+      setImage(data.image_base64_front);
+      setImageBack(data.image_base64_back);
+    }
+  }, [data]);
 
   return isLoading ? (
     <View style={style.container}>
