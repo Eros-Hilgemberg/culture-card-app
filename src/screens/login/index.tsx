@@ -45,11 +45,14 @@ function IndexLogin() {
   });
 
   const onSubmit = async (data: FormData) => {
+    console.log("Logando...");
     try {
       const response = await API.post("login", {
         email: data.user,
         password: data.password,
       });
+
+      console.log(response.data);
       if (!response.data.user.id || !response.data.user.name) {
         Alert.alert("Erro", "Sem dados de carteira");
         return;
@@ -64,12 +67,17 @@ function IndexLogin() {
       };
       await login(userData);
     } catch (error) {
+      console.log(error);
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           Alert.alert("Erro", "E-mail ou senha incorretos.");
         } else if (error.response?.status === 400) {
           Alert.alert("Erro", "Dados inválidos. Verifique suas informações.");
+        } else if (error.response?.status === 500) {
+          console.log(error.response);
+          Alert.alert("Erro", "Falha no servidor. Tente novamente mais tarde.");
         }
+        return;
       } else {
         Alert.alert("Erro", "Ocorreu um erro inesperado. Tente novamente.");
       }
