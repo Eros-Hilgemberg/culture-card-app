@@ -6,21 +6,19 @@ export const style = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    gap:20,
     width: "100%",
   },
   boxTop: {
-    height: Dimensions.get("window").height / 3,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
   boxMid: {
-    height: Dimensions.get("window").height / 4,
     width: "100%",
     paddingHorizontal: 37,
   },
   boxBottom: {
-    height: Dimensions.get("window").height / 3,
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 37,
@@ -32,7 +30,6 @@ export const style = StyleSheet.create({
   },
   text: {
     fontWeight: "bold",
-    marginTop: 40,
     fontSize: 18,
   },
   label: {

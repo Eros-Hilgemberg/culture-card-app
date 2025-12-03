@@ -30,6 +30,7 @@ type FormData = z.infer<typeof schema>;
 
 function IndexLogin() {
   const { login } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(true);
   const {
     register,
@@ -45,14 +46,13 @@ function IndexLogin() {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("Logando...");
+    setIsLoading(true);
     try {
       const response = await API.post("login", {
         email: data.user,
         password: data.password,
       });
 
-      console.log(response.data);
       if (!response.data.user.id || !response.data.user.name) {
         Alert.alert("Erro", "Sem dados de carteira");
         return;
@@ -65,8 +65,10 @@ function IndexLogin() {
           name: response.data.user.name,
         },
       };
+      setIsLoading(false);
       await login(userData);
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
@@ -87,7 +89,7 @@ function IndexLogin() {
     <View style={style.container}>
       <View style={style.boxTop}>
         <Image style={style.logo} source={Logo} />
-        <Text style={style.text}>Bem Vindo ao Culture Card App!</Text>
+        <Text style={style.text}>Culture Card App</Text>
       </View>
       <View style={style.boxMid}>
         <Text style={style.label}>E-mail</Text>
@@ -123,13 +125,13 @@ function IndexLogin() {
         )}
       </View>
       <View style={style.boxBottom}>
-        <TouchableOpacity style={style.button} onPress={handleSubmit(onSubmit)}>
+        <TouchableOpacity disabled={isLoading} style={style.button} onPress={handleSubmit(onSubmit)}>
           <Text style={style.textButton}>Entrar</Text>
         </TouchableOpacity>
-        <Text style={style.textBottom}>
+        {/* <Text style={style.textBottom}>
           Esqueceu sua senha?
           <Text style={{ color: "blue" }}> Clique aqui.</Text>
-        </Text>
+        </Text> */}
       </View>
     </View>
   );

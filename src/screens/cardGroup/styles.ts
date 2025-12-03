@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const style = StyleSheet.create({
   container: {
@@ -12,7 +12,7 @@ export const style = StyleSheet.create({
   },
   image: {
     width: 600,
-    height: 400,
+    height: Dimensions.get("window").height / 3,
     transform: [{ rotate: "90deg" }],
     resizeMode: "contain",
   },

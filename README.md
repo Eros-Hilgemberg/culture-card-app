@@ -26,7 +26,7 @@ npx expo start
 
 # Produção
 
-**Obs:** É preciso uma conta EXPO, link: "https://expo.dev ".
+**Obs:** É preciso uma conta Expo, link: "https://expo.dev".
 
 - Instalar o eas-cli:
 ```
@@ -78,5 +78,6 @@ npm run apk
 - Gerar o app-bundle(AAB):
 ```
 npm run android_bundle
-```
 
+```
+**Obs**: Pode realizar o download a partir do site do Eas Expo link: "https://expo.dev".

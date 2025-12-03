@@ -33,7 +33,7 @@ const Routes = () => {
           <Stack.Screen
             name="Login"
             component={IndexLogin}
-            options={{ title: "Login" }}
+            options={{ title: "Login" , headerShown: false}}
           />
         ) : (
           // Rotas privadas
